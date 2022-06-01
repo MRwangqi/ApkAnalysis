@@ -1,20 +1,29 @@
 package com.codelang.apkanalysis.ui.page.detail.page
 
 import android.widget.ImageView
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.codelang.apkanalysis.bean.ApkInfo
 import com.codelang.apkanalysis.ext.toFileSize
+import com.codelang.apkanalysis.ui.widget.PieChartWidget
 import com.codelang.apkanalysis.viewmodel.ApkType
 
 /**
@@ -23,8 +32,9 @@ import com.codelang.apkanalysis.viewmodel.ApkType
  */
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AppDetailWidget(data:()-> ApkInfo?,apkAnalysis:()-> List<Pair<ApkType, Long>>) {
+fun AppDetailWidget(data: () -> ApkInfo?, apkAnalysis: () -> List<Triple<ApkType, Long, Color>>) {
     val apkInfo = data()
     val analysis = apkAnalysis()
     apkInfo?.let { apk ->
@@ -84,17 +94,58 @@ fun AppDetailWidget(data:()-> ApkInfo?,apkAnalysis:()-> List<Pair<ApkType, Long>
                     )
                 }
 
-                if (analysis.isEmpty()){
-                    CircularProgressIndicator()
-                }else{
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Text(text = "暂时先用数字代替，后面做成饼图:", fontSize = 13.sp)
-                    analysis.forEach {
-                        Text(text = "${it.first}: ${it.second.toFileSize()}", fontSize = 11.sp)
-                    }
+                if (analysis.isEmpty()) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .align(Alignment.CenterHorizontally)
+                    )
+                } else {
+                    PieChartApk(analysis)
                 }
             }
         }
     }
+}
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun PieChartApk(analysis: List<Triple<ApkType, Long, Color>>) {
+    val list = analysis.map { Pair(it.second, it.third) }.toList()
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        PieChartWidget(
+            innerCircleColor = MaterialTheme.colorScheme.background,
+            list = list,
+            modifier = Modifier
+                .size(80.dp)
+        )
+
+        LazyVerticalGrid(
+            contentPadding = PaddingValues(10.dp),
+            cells = GridCells.Adaptive(minSize = 120.dp)
+        ) {
+            items(analysis) { item ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Spacer(
+                        modifier = Modifier
+                            .size(10.dp)
+                            .background(item.third)
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .width(3.dp)
+                    )
+                    Text(
+                        text = "${item.first.toString().toLowerCase()}:${item.second.toFileSize()}",
+                        fontSize = 11.sp,
+                        maxLines = 1
+                    )
+                }
+            }
+        }
+    }
 }

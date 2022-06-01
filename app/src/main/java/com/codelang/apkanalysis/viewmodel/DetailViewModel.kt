@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.codelang.apkanalysis.bean.ApkInfo
@@ -225,14 +226,13 @@ class DetailViewModel(app: Application) : AndroidViewModel(app) {
                     Log.e("analysisApk", "throwable" + it.message)
                 }
             }
-
-            val apkAnalysis =  arrayListOf<Pair<ApkType, Long>>()
-            apkAnalysis.add(Pair(ApkType.RES,resSize))
-            apkAnalysis.add(Pair(ApkType.ASSETS,assetsSize))
-            apkAnalysis.add(Pair(ApkType.DEX,dexSize))
-            apkAnalysis.add(Pair(ApkType.ARSC,arscSize))
-            apkAnalysis.add(Pair(ApkType.LIB,libSize))
-            apkAnalysis.add(Pair(ApkType.OTHER,otherSize))
+            val apkAnalysis = arrayListOf<Triple<ApkType, Long, Color>>()
+            apkAnalysis.add(Triple(ApkType.RES, resSize, Color.Blue))
+            apkAnalysis.add(Triple(ApkType.ASSETS, assetsSize, Color.Gray))
+            apkAnalysis.add(Triple(ApkType.DEX, dexSize, Color.Red))
+            apkAnalysis.add(Triple(ApkType.ARSC, arscSize, Color.Green))
+            apkAnalysis.add(Triple(ApkType.LIB, libSize, Color.Cyan))
+            apkAnalysis.add(Triple(ApkType.OTHER, otherSize, Color.Black))
             appState = appState.copy(apkAnalysis = apkAnalysis)
         }
     }
@@ -251,7 +251,7 @@ data class AppParams(var packageName: String)
 
 data class AppViewState(
     var apkInfo: ApkInfo? = null,
-    var apkAnalysis: List<Pair<ApkType, Long>> = arrayListOf(),
+    var apkAnalysis: List<Triple<ApkType, Long, Color>> = arrayListOf(),
     var soLibList: List<ItemData>? = null,
     var activityList: List<ItemData>? = null,
     var serviceList: List<ItemData>? = null,

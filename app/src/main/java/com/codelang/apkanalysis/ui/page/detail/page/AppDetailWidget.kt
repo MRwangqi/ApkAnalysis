@@ -1,16 +1,12 @@
 package com.codelang.apkanalysis.ui.page.detail.page
 
 import android.widget.ImageView
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -18,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.codelang.apkanalysis.bean.ApkInfo
-import com.codelang.apkanalysis.ui.page.home.AppInfoItem
-import com.codelang.apkanalysis.viewmodel.AppViewAction
+import com.codelang.apkanalysis.ext.toFileSize
+import com.codelang.apkanalysis.viewmodel.ApkType
 
 /**
  * @author wangqi
@@ -28,10 +24,10 @@ import com.codelang.apkanalysis.viewmodel.AppViewAction
 
 
 @Composable
-fun AppDetailWidget(data:()-> ApkInfo?) {
+fun AppDetailWidget(data:()-> ApkInfo?,apkAnalysis:()-> List<Pair<ApkType, Long>>) {
     val apkInfo = data()
+    val analysis = apkAnalysis()
     apkInfo?.let { apk ->
-
         Row(
             Modifier
                 .fillMaxSize()
@@ -86,6 +82,16 @@ fun AppDetailWidget(data:()-> ApkInfo?) {
                         style = TextStyle.Default.copy(color = Color.Blue),
                         fontSize = 13.sp
                     )
+                }
+
+                if (analysis.isEmpty()){
+                    CircularProgressIndicator()
+                }else{
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(text = "暂时先用数字代替，后面做成饼图:", fontSize = 13.sp)
+                    analysis.forEach {
+                        Text(text = "${it.first}: ${it.second.toFileSize()}", fontSize = 11.sp)
+                    }
                 }
             }
         }

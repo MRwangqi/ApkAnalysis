@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.codelang.apkanalysis.ui.page.AppWidget
+import com.codelang.apkanalysis.ui.page.NestedWidget
 import com.codelang.apkanalysis.ui.theme.ApkAnalysisTheme
 
 class MainActivity : ComponentActivity() {

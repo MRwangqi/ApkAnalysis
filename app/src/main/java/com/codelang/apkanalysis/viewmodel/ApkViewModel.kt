@@ -3,6 +3,7 @@ package com.codelang.apkanalysis.viewmodel
 import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.os.Build
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,6 +17,10 @@ import com.codelang.apkanalysis.utils.SigningUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.BufferedInputStream
+import java.io.FileInputStream
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
 
 
 class ApkViewModel(app: Application) : AndroidViewModel(app) {
@@ -30,10 +35,11 @@ class ApkViewModel(app: Application) : AndroidViewModel(app) {
                         ApplicationInfo.FLAG_SYSTEM and it.applicationInfo.flags == 0
                     }
                     .map { apk ->
-                       apk.toApkInfo()
+                        apk.toApkInfo()
                     }.toList()
             }
             cacheData = apkInfos
         }
     }
+
 }

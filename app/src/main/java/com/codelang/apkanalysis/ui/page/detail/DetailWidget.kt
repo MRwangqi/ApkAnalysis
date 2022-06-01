@@ -129,7 +129,7 @@ fun TabViewPager(
         ) { index ->
             when (val action = tabData[index].second) {
                 AppViewAction.ApkDetailAction -> {
-                    AppDetailWidget() { appState.apkInfo }
+                    AppDetailWidget({ appState.apkInfo }, { appState.apkAnalysis })
                 }
                 AppViewAction.SoLibraryAction -> {
                     ListDetailWidget(action) { appState.soLibList }

@@ -83,6 +83,7 @@ fun HomeWidget(
 
 }
 
+
 @Composable
 fun AppInfoItem(apk: ApkInfo, onClick: () -> Unit) {
     Card(modifier = Modifier.padding(10.dp, 5.dp, 10.dp, 0.dp) .background(MaterialTheme.colorScheme.background.copy(0.1f))) {

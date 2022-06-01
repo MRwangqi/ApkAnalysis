@@ -1,6 +1,7 @@
 package com.codelang.apkanalysis.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,6 +9,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.codelang.apkanalysis.bean.ApkInfo
 import com.codelang.apkanalysis.bean.toApkInfo
+import com.codelang.apkanalysis.bean.toTime
+import com.codelang.apkanalysis.ext.toFileSize
 import com.codelang.apkanalysis.utils.PackageUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -62,6 +65,9 @@ class DetailViewModel(app: Application) : AndroidViewModel(app) {
         val packageInfo = PackageUtils.getPackageInfo(params.packageName)
         val apkInfo = packageInfo.toApkInfo()
         appState = appState.copy(apkInfo = apkInfo)
+
+        //todo 分析 apk
+        analysisApk(apkInfo.apkPath ?: "")
     }
 
 
@@ -183,13 +189,69 @@ class DetailViewModel(app: Application) : AndroidViewModel(app) {
 
     }
 
+
+    private fun analysisApk(path: String) {
+        var resSize = 0L
+        var assetsSize = 0L
+        var dexSize = 0L
+        var arscSize = 0L
+        var libSize = 0L
+        var otherSize = 0L
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                kotlin.runCatching {
+                    val input = FileInputStream(path)
+                    val zipInputStream = ZipInputStream(BufferedInputStream(input))
+                    var ze: ZipEntry?
+                    while (zipInputStream.nextEntry.also { ze = it } != null) {
+                        if (ze!!.name.startsWith("res/")) {
+                            resSize += ze!!.size
+                        } else if (ze!!.name.startsWith("assets/")) {
+                            assetsSize += ze!!.size
+                        } else if (ze!!.name.endsWith(".dex")) {
+                            dexSize += ze!!.size
+                        } else if (ze!!.name == "resources.arsc") {
+                            arscSize += ze!!.size
+                        } else if (ze!!.name.startsWith("lib/") || ze!!.name.startsWith("libs/")) {
+                            libSize += ze!!.size
+                        } else {
+                            otherSize += ze!!.size
+                        }
+                    }
+                    zipInputStream.closeEntry()
+                    input.close()
+                }.onFailure {
+                    Log.e("analysisApk", "throwable" + it.message)
+                }
+            }
+
+            val apkAnalysis =  arrayListOf<Pair<ApkType, Long>>()
+            apkAnalysis.add(Pair(ApkType.RES,resSize))
+            apkAnalysis.add(Pair(ApkType.ASSETS,assetsSize))
+            apkAnalysis.add(Pair(ApkType.DEX,dexSize))
+            apkAnalysis.add(Pair(ApkType.ARSC,arscSize))
+            apkAnalysis.add(Pair(ApkType.LIB,libSize))
+            apkAnalysis.add(Pair(ApkType.OTHER,otherSize))
+            appState = appState.copy(apkAnalysis = apkAnalysis)
+        }
+    }
 }
 
+enum class ApkType {
+    RES,
+    ASSETS,
+    DEX,
+    ARSC,
+    LIB,
+    OTHER
+}
 
 data class AppParams(var packageName: String)
 
 data class AppViewState(
     var apkInfo: ApkInfo? = null,
+    var apkAnalysis: List<Pair<ApkType, Long>> = arrayListOf(),
     var soLibList: List<ItemData>? = null,
     var activityList: List<ItemData>? = null,
     var serviceList: List<ItemData>? = null,

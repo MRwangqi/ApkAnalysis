@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
     }
 
 
-   private val viewModel by viewModels<ApkViewModel>()
+    val viewModel by viewModels<ApkViewModel>()
     private fun nativePage() {
         setContentView(R.layout.layout_main)
         val adapter = AppListAdapter()

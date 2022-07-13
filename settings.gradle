@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ApkAnalysis"
 include ':app'
+include ':benchmark'

@@ -37,6 +37,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        benchmark {
+            signingConfig signingConfigs.release
+            matchingFallbacks = ['release']
+            debuggable false
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -83,4 +88,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager:0.20.2"
 
     implementation "org.smali:dexlib2:2.5.2"
+
+    // 覆盖 compose-ui 中的 profileinstall 版本，并且需运行在 Android12 以下的机子才行
+    implementation "androidx.profileinstaller:profileinstaller:1.2.0-alpha02"
 }

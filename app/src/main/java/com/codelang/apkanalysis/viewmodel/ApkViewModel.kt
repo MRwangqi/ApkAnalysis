@@ -8,6 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.codelang.apkanalysis.bean.ApkInfo
 import com.codelang.apkanalysis.bean.toApkInfo
@@ -27,6 +29,9 @@ class ApkViewModel(app: Application) : AndroidViewModel(app) {
     var apkInfos by mutableStateOf(listOf<ApkInfo>())
     var cacheData = listOf<ApkInfo>()
 
+
+    var apkList  = MutableLiveData<List<ApkInfo>>()
+
     fun dispatchData() {
         viewModelScope.launch {
             apkInfos = withContext(Dispatchers.IO) {
@@ -39,6 +44,7 @@ class ApkViewModel(app: Application) : AndroidViewModel(app) {
                     }.toList()
             }
             cacheData = apkInfos
+            apkList.postValue(apkInfos)
         }
     }
 

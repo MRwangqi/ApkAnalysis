@@ -31,7 +31,7 @@ class ExampleStartupBenchmark {
         packageName = "com.codelang.apkanalysis",
         metrics = listOf(StartupTimingMetric()),
         iterations = 5,
-        startupMode = StartupMode.COLD,
+        startupMode = StartupMode.HOT,
         compilationMode = CompilationMode.DEFAULT
     ) {
         pressHome()

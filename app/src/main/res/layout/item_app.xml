@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iconImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvAppName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintLeft_toRightOf="@+id/iconImage"
+        app:layout_constraintTop_toTopOf="@id/iconImage"
+        tools:ignore="HardcodedText"
+        tools:text="掘金" />
+
+    <TextView
+        android:id="@+id/tvAppPackage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@+id/tvAppName"
+        app:layout_constraintTop_toBottomOf="@id/tvAppName"
+        tools:ignore="HardcodedText"
+        tools:text="com.daimajia.juejin" />
+
+    <TextView
+        android:id="@+id/tvAppVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@+id/tvAppPackage"
+        app:layout_constraintTop_toBottomOf="@id/tvAppPackage"
+        tools:ignore="HardcodedText"
+        tools:text="1.0.0" />
+
+    <TextView
+        android:id="@+id/tvAppTarget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@+id/tvAppVersion"
+        app:layout_constraintTop_toBottomOf="@id/tvAppVersion"
+        tools:ignore="HardcodedText"
+        tools:text="TargetApi:31" />
+</androidx.constraintlayout.widget.ConstraintLayout>

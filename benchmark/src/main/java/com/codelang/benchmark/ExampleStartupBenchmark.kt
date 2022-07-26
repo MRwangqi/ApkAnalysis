@@ -1,5 +1,6 @@
 package com.codelang.benchmark
 
+import androidx.benchmark.macro.BaselineProfileMode
 import androidx.benchmark.macro.CompilationMode
 import androidx.benchmark.macro.StartupMode
 import androidx.benchmark.macro.StartupTimingMetric
@@ -26,13 +27,26 @@ class ExampleStartupBenchmark {
     @get:Rule
     val benchmarkRule = MacrobenchmarkRule()
 
+//    @Test
+//    fun startupNoCompilation() {
+//        startup(CompilationMode.None())
+//    }
+
     @Test
-    fun startup() = benchmarkRule.measureRepeated(
+    fun startupBaselineProfile() {
+        startup(
+            CompilationMode.Partial(
+                baselineProfileMode = BaselineProfileMode.Require
+            )
+        )
+    }
+
+   private fun startup(compilationMode: CompilationMode) = benchmarkRule.measureRepeated(
         packageName = "com.codelang.apkanalysis",
         metrics = listOf(StartupTimingMetric()),
-        iterations = 5,
+        iterations = 10,
         startupMode = StartupMode.COLD,
-        compilationMode = CompilationMode.DEFAULT
+        compilationMode = compilationMode
     ) {
         pressHome()
         startActivityAndWait()

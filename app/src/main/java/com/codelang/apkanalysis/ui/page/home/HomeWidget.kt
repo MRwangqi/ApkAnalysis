@@ -46,12 +46,12 @@ fun HomeWidget(
         mutableStateOf("")
     }
     Scaffold(topBar = {
-//        SearchWidget(searchText) {
-//            searchText = it
-//            viewModel.apkInfos = viewModel.cacheData.filter {
-//                it.appName!!.contains(searchText) || it.packageName!!.contains(searchText)
-//            }.toList()
-//        }
+        SearchWidget(searchText) {
+            searchText = it
+            viewModel.apkInfos = viewModel.cacheData.filter {
+                it.appName!!.contains(searchText) || it.packageName!!.contains(searchText)
+            }.toList()
+        }
     }) {
         if (apkInfos.isEmpty()) {
             if (viewModel.cacheData.isEmpty()) {

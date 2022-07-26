@@ -26,8 +26,8 @@ import com.codelang.apkanalysis.viewmodel.ApkViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        composePage()
-        nativePage()
+        composePage()
+//        nativePage()
     }
 
 

@@ -27,10 +27,10 @@ class ExampleStartupBenchmark {
     @get:Rule
     val benchmarkRule = MacrobenchmarkRule()
 
-//    @Test
-//    fun startupNoCompilation() {
-//        startup(CompilationMode.None())
-//    }
+    @Test
+    fun startupNoCompilation() {
+        startup(CompilationMode.None())
+    }
 
     @Test
     fun startupBaselineProfile() {
